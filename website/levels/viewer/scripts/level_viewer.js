@@ -1186,6 +1186,7 @@ async function playReplay(replayKey) {
 			if (replay) {
 				const points = [];
 				const colors = [];
+				const sublevels = new Set();
 				let attemptStart = 0;
 				const trackRoute = () => {
 					for (let i = attemptStart + 3; i < colors.length; i += 3) {
@@ -1203,6 +1204,8 @@ async function playReplay(replayKey) {
 					y = 0,
 					z = 0;
 				for (const frame of replay.frames) {
+					if (frame.subLevel) sublevels.add(frame.subLevel);
+					
 					const checkpoint = frame.checkpoint;
 					if (checkpoint) {
 						cx = -checkpoint.x || cx;
@@ -1246,7 +1249,18 @@ async function playReplay(replayKey) {
 				scene.add(replayPath);
 
 				console.log(`Loaded ghost with ${points.length} frames`);
-			}
+				if (sublevels.size > 0) {
+					const formattedSubs = [...sublevels]
+						.map(sub => {
+							const id = sub.startsWith("community:") ? sub.slice("community:".length) : sub;
+							const base = config.PAGE_URL.endsWith('/') ? config.PAGE_URL : config.PAGE_URL + '/';
+							return base + id;
+						})
+						.join(', ');
+
+					window.toast(`yo this replay went in these sublevel(s) btw: ${formattedSubs}`);
+				}
+			}	
 		})
 		.catch((err) => console.error(err))
 		.finally(() => (replayLoading = false));
