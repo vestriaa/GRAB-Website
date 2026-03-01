@@ -162,6 +162,9 @@ message LevelNodeStatic
 	bool isGrabbable = 10; //Used for DEFAULT_COLORED material to allow grabbing it or not
 	bool isGrapplable = 11; //Used for DEFAULT_COLORED material to allow grappling it or not
 	bool isPassable = 12;
+
+	bool isGradient = 13;
+	Vector gradientDirection = 14;
 }
 
 message LevelNodeCrumbling
